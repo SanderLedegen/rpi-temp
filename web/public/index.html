@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+  		<meta name="author" content="Sander Ledegen">
+
+        <title>RPi GPIO temperature</title>
+        <link rel="stylesheet" href="" />
+        <link rel="stylesheet" href="vendor/angular-chartjs/angular-chart.min.css">
+        <style>
+        	.ng-cloak {
+        		display: none !important;
+        	}
+
+        	body {
+        		font-family: Tahoma, Geneva, sans-serif;
+        	}
+
+        	h1 {
+        		text-align: center;
+        	}
+
+        	.canvas-wrapper {
+        		width: 80%;
+        		margin: 0 auto;
+        	}
+        </style>
+    </head>
+    <body ng-app="app">
+    	<h1>RPi GPIO temperature</h1>
+
+    	<div class="canvas-wrapper" ng-controller="HomeController">
+    		<canvas id="line" class="chart chart-line"
+		    		chart-data="data"
+		    		chart-labels="labels"
+		    		chart-options="options"></canvas> 
+    	</div>
+
+		<script src="vendor/angular.js"></script>
+		<script src="vendor/chartjs/Chart.js"></script>
+		<script src="vendor/angular-chartjs/angular-chart.js"></script>
+        <script src="js/app.js"></script>
+		<script src="js/services/TemperatureReadingService.js"></script>
+        <script src="js/controllers/HomeController.js"></script>
+    </body>
+</html>

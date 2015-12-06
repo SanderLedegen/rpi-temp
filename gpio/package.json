@@ -1,0 +1,15 @@
+{
+  "name": "gpio",
+  "version": "1.0.0",
+  "description": "Parses and stores temperatures values read through the Raspberry Pi's GPIO pins.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sander Ledegen",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "0.0.2",
+    "nedb-logger": "^0.1.0"
+  }
+}

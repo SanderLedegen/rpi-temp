@@ -1,0 +1,15 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "Web application showing stored temperature values that previously have been read through GPIO.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sander Ledegen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.3",
+    "nedb": "^1.5.0"
+  }
+}
