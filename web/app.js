@@ -4,6 +4,7 @@ var app = express();
 var NeDB = require("nedb");
 var config = require("../config/config");
 var db = new NeDB({ filename: config.dbPath, autoload: true });
+db.persistence.setAutocompactionInterval(5 * 60 * 1000);
 
 app.use(express.static("public"));
 
