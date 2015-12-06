@@ -8,7 +8,7 @@ var db = new NeDB({ filename: config.dbPath, autoload: true });
 app.use(express.static("public"));
 
 app.get("/api/readings", function (req, res) {
-	db.find({}, function (err, docs) {
+	db.find({}).sort({ timestamp: 1 }).exec(function (err, docs) {
 		if (err) {
 			res.send(err);
 		}
