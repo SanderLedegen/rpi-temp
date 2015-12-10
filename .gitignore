@@ -26,7 +26,12 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
-# Custom ignores
+# Ignore my not-so-professional test files ^_^
 gpio/test
-rpi-temp-gpio.db
+
+# NoSQL database files
+*.meta
+*.nosql
+
+# Personal config files
 config/config.js

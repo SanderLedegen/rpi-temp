@@ -10,6 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "fs": "0.0.2",
-    "nedb-logger": "^0.1.0"
+    "nosql": "^3.0.5"
   }
 }

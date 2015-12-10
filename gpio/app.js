@@ -1,12 +1,12 @@
 "use strict";
 
-var NeDB = require("nedb-logger");
+var nosql = require("nosql");
 var fs = require("fs");
-var config = require("../config/config");
-var db = new NeDB({ filename: config.dbPath });
+var config = require("../shared/shared").config;
+var db = nosql.load(config.dbPath);
 
-const DEVICES_PATH = config.devicesPath ? config.devicesPath : "/sys/bus/w1/devices/";
-const SENSOR_FILE_MASK = "28-";
+const DEVICES_PATH = config.devicesPath;
+const SENSOR_DIRECTORY_MASK = "28-";
 const SENSOR_PATH = DEVICES_PATH + "%s/w1_slave";
 
 function readDir(path) {
@@ -40,7 +40,7 @@ function parseFileContent(fileContent) {
 
 	var temperatureDocument = {
 		sensorId: 1337, // TODO: get the sensor id again, somehow
-		timestamp: new Date(),
+		timestamp: Date.now(),
 		temperature: sensorValue / 1000 + config.sensorTemperatureOffset
 	}
 
@@ -49,15 +49,28 @@ function parseFileContent(fileContent) {
 
 function insertIntoDatabase(temperatureReadingDocument) {
 	return new Promise(function (resolve, reject) {
-		db.insert(temperatureReadingDocument, function (error) {
-			return error ? reject(error) : resolve();
+		db.views.create("last24Hours", filterLast24Hours, sortTimestampAscending, function (error, count) {
+			db.insert(temperatureReadingDocument, function (error) {
+				return error ? reject(error) : resolve();
+			});
 		});
+		// TODO: Or perhaps insert the document and then re-create each view (6h, 12h, 24h, ...)?
 	});
+}
+
+var filterLast24Hours = function(doc) {
+	if (doc.timestamp >= Date.now() - 24 * 3600 * 1000) {
+		return doc;
+	}
+}
+
+var sortTimestampAscending = function(doc1, doc2) {
+	return doc1.timestamp - doc2.timestamp;
 }
 
 readDir(DEVICES_PATH).then(function (fileEntries) {	
 	var validFileEntries = fileEntries.filter(function (file) {
-		return file.indexOf(SENSOR_FILE_MASK) == 0;
+		return file.indexOf(SENSOR_DIRECTORY_MASK) == 0;
 	});
 	
 	return Promise.all(validFileEntries.map(readFile));

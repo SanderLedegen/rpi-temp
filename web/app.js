@@ -1,21 +1,23 @@
+"use strict";
+
 var express = require("express");
 var app = express();
-
-var NeDB = require("nedb");
-var config = require("../config/config");
-var db = new NeDB({ filename: config.dbPath, autoload: true });
-db.persistence.setAutocompactionInterval(5 * 60 * 1000);
+var nosql = require("nosql");
+var config = require("../shared/shared").config;
+var db = nosql.load(config.dbPath)
 
 app.use(express.static("public"));
 
 app.get("/api/readings", function (req, res) {
-	db.find({}).sort({ timestamp: 1 }).exec(function (err, docs) {
+
+	db.views.all("last24Hours", function (err, docs, count) {
 		if (err) {
 			res.send(err);
 		}
 
 		res.json(docs);
 	});
+
 });
 
 app.get("*", function (req, res) {
