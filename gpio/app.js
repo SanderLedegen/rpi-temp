@@ -49,12 +49,12 @@ function parseFileContent(fileContent) {
 
 function insertIntoDatabase(temperatureReadingDocument) {
 	return new Promise(function (resolve, reject) {
-		db.views.create("last24Hours", filterLast24Hours, sortTimestampAscending, function (error, count) {
-			db.insert(temperatureReadingDocument, function (error) {
-				return error ? reject(error) : resolve();
-			});
+		db.insert(temperatureReadingDocument, function (error) {
+			db.views.create("last24Hours", filterLast24Hours, sortTimestampAscending, function (error, count) {});
+			db.views.create("last12Hours", filterLast12Hours, sortTimestampAscending, function (error, count) {});
+			db.views.create("last6Hours", filterLast6Hours, sortTimestampAscending, function (error, count) {});
+			return error ? reject(error) : resolve();
 		});
-		// TODO: Or perhaps insert the document and then re-create each view (6h, 12h, 24h, ...)?
 	});
 }
 
@@ -62,7 +62,19 @@ var filterLast24Hours = function(doc) {
 	if (doc.timestamp >= Date.now() - 24 * 3600 * 1000) {
 		return doc;
 	}
-}
+};
+
+var filterLast12Hours = function(doc) {
+	if (doc.timestamp >= Date.now() - 12 * 3600 * 1000) {
+		return doc;
+	}
+};
+
+var filterLast6Hours = function(doc) {
+	if (doc.timestamp >= Date.now() - 6 * 3600 * 1000) {
+		return doc;
+	}
+};
 
 var sortTimestampAscending = function(doc1, doc2) {
 	return doc1.timestamp - doc2.timestamp;

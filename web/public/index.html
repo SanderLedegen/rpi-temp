@@ -27,10 +27,14 @@
         	}
         </style>
     </head>
-    <body ng-app="app">
+    <body ng-app="app" ng-controller="HomeController">
     	<h1>RPi GPIO temperature</h1>
 
-    	<div class="canvas-wrapper" ng-controller="HomeController">
+        <select ng-model="selectData.lastHours" ng-change="changeLastHours()">
+            <option ng-repeat="option in selectData.options" value="{{option.value}}">{{option.name}}</option>
+        </select>
+
+    	<div class="canvas-wrapper">
     		<canvas id="line" class="chart chart-line"
 		    		chart-data="data"
 		    		chart-labels="labels"

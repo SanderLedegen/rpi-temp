@@ -2,6 +2,19 @@
 	"use strict";
 
 	var HomeController = function($scope, $filter, temperatureReadingService) {
+		$scope.selectData = {
+			lastHours: "12",
+			options: [
+				{ value: "24", name: "Last 24 hours" },
+				{ value: "12", name: "Last 12 hours" },
+				{ value: "6", name: "Last 6 hours" }
+			]
+		};
+
+		$scope.changeLastHours = function () {
+			var lastHours = $scope.selectData.lastHours;
+			temperatureReadingService.getTemperaturesForLastHours(lastHours).then(success, failure);
+		};
 
 		$scope.labels = [];
 		$scope.data = [];
@@ -23,7 +36,7 @@
 			console.log(error);
 		};
 
-		temperatureReadingService.getTemperatures().then(success, failure);		
+		$scope.changeLastHours();
 	};
 	
 	angular.module("app").controller("HomeController", ["$scope", "$filter", "TemperatureReadingService", HomeController]);

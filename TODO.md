@@ -1,6 +1,5 @@
 #To do
 - Switch from NeDB to petersirka's NoSQL (https://github.com/petersirka/nosql)
-- Add option 'View temperatures of last x hours'
 - Get access to the sensor id in the promise chain
 - Design
 - Fix Express deprecated error

@@ -3,12 +3,17 @@
 
 	var TemperatureReadingService = function($http) {
 
-		var getTemperatures = function() {
+		var getAllTemperatures = function() {
 			return $http.get("/api/readings");
 		};
 
+		var getTemperaturesForLastHours = function (hours) {
+			return $http.get("/api/readings?lastHours=" + hours);
+		};
+
 		return {
-			getTemperatures: getTemperatures
+			getAllTemperatures: getAllTemperatures,
+			getTemperaturesForLastHours: getTemperaturesForLastHours
 		}
 	};
 

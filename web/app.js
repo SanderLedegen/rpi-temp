@@ -10,7 +10,22 @@ app.use(express.static("public"));
 
 app.get("/api/readings", function (req, res) {
 
-	db.views.all("last24Hours", function (err, docs, count) {
+	var viewName;
+	switch(parseInt(req.query.lastHours)) {
+		case 6:
+			viewName = "last6Hours";
+			break;
+		case 12:
+			viewName = "last12Hours";
+			break;
+		case 24:
+			viewName = "last24Hours";
+			break;
+		default:
+			viewName = "last24Hours";
+	}
+
+	db.views.all(viewName, function (err, docs, count) {
 		if (err) {
 			res.send(err);
 		}
