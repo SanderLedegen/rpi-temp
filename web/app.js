@@ -30,6 +30,9 @@ app.get("/api/readings", function (req, res) {
 			res.send(err);
 		}
 
+		// Handle sensor mappings (rename sensor ID to custom name)
+		mapSensorIds(docs);
+
 		res.json(docs);
 	});
 
@@ -38,6 +41,20 @@ app.get("/api/readings", function (req, res) {
 app.get("*", function (req, res) {
 	res.sendfile("./public/index.html");
 });
+
+function mapSensorIds(docs) {
+	var sensorMappings = config.sensorMapping;
+	if (sensorMappings.length > 0) {
+		for (var doc of docs) {
+			var foundSensorMappings = sensorMappings.filter(function (sensorMapping) {
+				return sensorMapping.id === doc.sensorId;
+			});
+			if (foundSensorMappings.length > 0) {
+				doc.sensorId = foundSensorMappings[0].name;
+			}
+		}
+	}
+}
 
 app.listen(config.port);
 console.log("Listening on port %s...".replace("%s", config.port));

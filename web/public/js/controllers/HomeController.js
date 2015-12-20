@@ -16,25 +16,69 @@
 			temperatureReadingService.getTemperaturesForLastHours(lastHours).then(success, failure);
 		};
 
-		$scope.labels = [];
-		$scope.data = [];
-		$scope.options = {
-			tooltipTemplate: "<%= value %>°C",
-			responsive: true,
-			tooltipFillColor: "rgba(0,0,0,0.5)",
-			tooltipFontFamily: "Tahoma, Geneva, sans-serif",
-			scaleFontFamily: "Tahoma, Geneva, sans-serif",
-			scaleIntegersOnly: false
-		};
+		$scope.highchartsNG = {
+	        options: {
+	            chart: {
+	                type: "line"
+	            },
+	            tooltip: {
+	            	valueSuffix: "°C"
+	            }
+	        },
+	        series: [],
+	        title: {
+	            text: "Temperature",
+	            style: {
+	            	"fontWeight": "bold",
+	            	"fontSize": "22px"
+	            }
+	        },
+	        subtitle: {
+	            text: "Raspberry Pi sensor(s)"
+	        },
+	        yAxis: {
+	        	title: {
+	        		text: "Temperature (°C)"
+	        	}
+	        },
+	        loading: true,
+	        credits: {
+	        	enabled: false
+	        }
+	    };
 
 		var success = function (data) {
-			$scope.labels = data.data.map(function (tempReading) { return $filter("date")(tempReading.timestamp, "d MMM, H:mm") });
-			$scope.data = [data.data.map(function (tempReading) { return tempReading.temperature })];
+			var groupedTemperatures = groupBy(data.data, "sensorId");
+			$scope.highchartsNG.series = [];
+
+			angular.forEach(groupedTemperatures, function (value, key) {
+				var series = {
+					name: key,
+					data: value.map(function (tempReading) { return tempReading.temperature })
+				};
+				$scope.highchartsNG.series.push(series);
+			});
+
+			$scope.highchartsNG.options.xAxis = {
+				categories: data.data.map(function (tempReading) { return $filter("date")(tempReading.timestamp, "d MMM, H:mm") } )
+			};
+			$scope.highchartsNG.loading = false;
 		};
 
 		var failure = function (error) {
 			console.log(error);
 		};
+
+		var groupBy = function (array, property) {
+			return array.reduce(function(prevVal, curVal) {
+				if (!prevVal[curVal[property]]) {
+					prevVal[curVal[property]] = [];
+				}
+
+				prevVal[curVal[property]].push(curVal);
+				return prevVal;
+			}, {});
+		}
 
 		$scope.changeLastHours();
 	};

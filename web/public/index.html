@@ -2,48 +2,25 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="description" content="">
+        <meta name="description" content="A Raspberry Pi temperature logging web app">
   		<meta name="author" content="Sander Ledegen">
 
         <title>RPi GPIO temperature</title>
-        <link rel="stylesheet" href="" />
-        <link rel="stylesheet" href="vendor/angular-chartjs/angular-chart.min.css">
-        <style>
-        	.ng-cloak {
-        		display: none !important;
-        	}
-
-        	body {
-        		font-family: Tahoma, Geneva, sans-serif;
-        	}
-
-        	h1 {
-        		text-align: center;
-        	}
-
-        	.canvas-wrapper {
-        		width: 80%;
-        		margin: 0 auto;
-        	}
-        </style>
+        <link rel="stylesheet" href="css/style.css" />
     </head>
-    <body ng-app="app" ng-controller="HomeController">
-    	<h1>RPi GPIO temperature</h1>
+    <body ng-app="app">
+        <section ng-controller="HomeController">
+            <select class="ng-cloak" ng-model="selectData.lastHours" ng-change="changeLastHours()">
+                <option ng-repeat="option in selectData.options" value="{{option.value}}">{{option.name}}</option>
+            </select>
 
-        <select ng-model="selectData.lastHours" ng-change="changeLastHours()">
-            <option ng-repeat="option in selectData.options" value="{{option.value}}">{{option.name}}</option>
-        </select>
-
-    	<div class="canvas-wrapper">
-    		<canvas id="line" class="chart chart-line"
-		    		chart-data="data"
-		    		chart-labels="labels"
-		    		chart-options="options"></canvas> 
-    	</div>
+            <highchart config="highchartsNG"></highchart>            
+        </section>
 
 		<script src="vendor/angular.js"></script>
-		<script src="vendor/chartjs/Chart.js"></script>
-		<script src="vendor/angular-chartjs/angular-chart.js"></script>
+        <script src="vendor/highcharts/highcharts.js"></script>
+        <script src="vendor/highcharts/standalone-framework.js"></script>
+        <script src="vendor/highcharts/highcharts-ng.min.js"></script>
         <script src="js/app.js"></script>
 		<script src="js/services/TemperatureReadingService.js"></script>
         <script src="js/controllers/HomeController.js"></script>

@@ -9,6 +9,9 @@ const DEVICES_PATH = config.devicesPath;
 const SENSOR_DIRECTORY_MASK = "28-";
 const SENSOR_PATH = DEVICES_PATH + "%s/w1_slave";
 
+var sensorIds = [];
+var currentSensorIdIndex = 0;
+
 function readDir(path) {
 	return new Promise(function (resolve, reject) {
 		fs.readdir(DEVICES_PATH, function (err, entries) {
@@ -27,7 +30,7 @@ function readFile(file) {
 
 function parseFileContent(fileContent) {
 	var lines = fileContent.match(/[^\r\n]+/g);
-	var correctMeasurement = lines.length == 2 && lines[0].indexOf("YES") >= 0;
+	var correctMeasurement = lines.length === 2 && lines[0].indexOf("YES") >= 0;
 	if (!correctMeasurement) {
 		return;
 	}
@@ -39,11 +42,12 @@ function parseFileContent(fileContent) {
 	}
 
 	var temperatureDocument = {
-		sensorId: 1337, // TODO: get the sensor id again, somehow
+		sensorId: sensorIds[currentSensorIdIndex],
 		timestamp: Date.now(),
 		temperature: sensorValue / 1000 + config.sensorTemperatureOffset
 	}
 
+	currentSensorIdIndex++;
 	return temperatureDocument;
 }
 
@@ -82,8 +86,9 @@ var sortTimestampAscending = function(doc1, doc2) {
 
 readDir(DEVICES_PATH).then(function (fileEntries) {	
 	var validFileEntries = fileEntries.filter(function (file) {
-		return file.indexOf(SENSOR_DIRECTORY_MASK) == 0;
+		return file.indexOf(SENSOR_DIRECTORY_MASK) === 0;
 	});
+	sensorIds = validFileEntries;
 	
 	return Promise.all(validFileEntries.map(readFile));
 }).then(function (fileContents) {

@@ -5,7 +5,8 @@ var defaults = {
 	dbPath: "./rpi-temp-gpio.db",
 	devicesPath: "/sys/bus/w1/devices/",
 	port: 8000,
-	sensorTemperatureOffset: 0
+	sensorTemperatureOffset: 0,
+    sensorMapping: []
 };
 var options = {};
 try {
