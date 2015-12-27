@@ -38,7 +38,7 @@ Inside the config file, the options mentioned below are available. I added some 
 // Path to the file that will hold the database. Will be created automatically if it doesn't exist and can have any extension.
 dbPath: "path/to/database/file",
 
-// Raspberry Pi lists all its one-wire devices under /sys/bus/w1/devices/. Only specify when an override if necessary.
+// Raspberry Pi lists all its one-wire devices under /sys/bus/w1/devices/. Only specify when an override is necessary.
 devicesPath: "path/to/w1/devices",
 
 // Port used for the web server
@@ -67,7 +67,7 @@ The project is divided into two parts: **GPIO** and **web**. The GPIO part reads
 Each time you run `node app.js` in the GPIO folder, a temperature reading will be done and its result will be stored into the database. It's as simple as that. Of course, the intention of this approach is that you use this command in a cronjob or similar to run on pre-defined intervals to create a consistent data set.
 
 ### Web
-As with the GPIO subproject, run `node app.js` in the web folder and after a few seconds, the web server will be happy to handle your requests at [http://localhost:8000](http://localhost:8000). If you configured another port in `config.js`, then it's not 8000, obviously.
+As with the GPIO subproject, run `node app.js` in the web folder and after a few seconds, the web server will be happy to handle your requests at [http://localhost:8000](http://localhost:8000). If you configured another port in `config.js`, then it's not port 8000, obviously.
 
 ## Optional
 
@@ -84,8 +84,12 @@ There, add a new line in the typical [cronjob format](https://www.raspberrypi.or
 ```
 
 ### Preserve your SD card, use tmpfs
-Writing a lot to your Pi's SD card can cause it to degrade rapidly. Especially when you do a write every _x_ minutes. After a few weeks or months, those writes begin to count up and that's why I decided to create a RAM disk to store my database file on and protect my beloved SD card. Moreover, this is completely transparent for processes accessing files that are located on a RAM disk, so why not? The only drawback is that on a reboot or power loss, you lose your database, but that's something I can live with. Creating such file system can be done by opening the Pi's file system table and appending a line similar to this one:
+Writing a lot to your Pi's SD card can cause it to degrade rapidly. Especially when you do a write every _x_ minutes. After a few weeks or months, those writes begin to count up and that's why I decided to create a RAM disk to store my database file on and protect my beloved SD card. Moreover, this is completely transparent for processes accessing files that are located on a RAM disk, so why not? The only drawback is that on a reboot or power loss, you lose your database, but that's something I can live with. Creating such file system can be done by opening the Pi's file system table like this...
 ```sh
 nano /etc/fstab
+```
+
+...and appending a line similar to this one:
+```sh
 tmpfs    /opt/rpi-temp    tmpfs    defaults,noatime    0    0
 ```

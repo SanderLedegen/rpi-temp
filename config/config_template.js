@@ -3,7 +3,7 @@ module.exports = {
 	// Path to the file that will hold the database. Will be created automatically if it doesn't exist and can have any extension.
 	dbPath: "path/to/database/file",
 	
-	// Raspberry Pi lists all its one-wire devices under /sys/bus/w1/devices/. Only specify when an override if necessary.
+	// Raspberry Pi lists all its one-wire devices under /sys/bus/w1/devices/. Only specify when an override is necessary.
 	devicesPath: "path/to/w1/devices",
 
 	// Port used for the web server
