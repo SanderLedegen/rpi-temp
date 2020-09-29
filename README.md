@@ -17,7 +17,7 @@ The installation is quite straightforward: you pull the source and download the 
 
 To do the former, issue the command below on your Pi in a location of your preference:
 ```sh
-git pull https://github.com/SanderLedegen/rpi-temp.git
+git clone https://github.com/SanderLedegen/rpi-temp.git
 ```
 
 Installing the dependencies can then be completed by running following command in both the **gpio** and **web** folder:
